@@ -79,7 +79,7 @@ void decreaseIntensity() {
 
 void loop() 
 {
- //                                                                      Serial.print("Take Input : ");
+ // Serial.print("Take Input : ");
   TakeInput();
   AnimationStep();
   delay(10);
@@ -200,14 +200,14 @@ void TakeInput(){
     irrecv.resume(); // Receive the next value 
   }
   else {
-  //                                                 Serial.println("no input :(");
+  // Serial.println("no input :(");
   }
 }
 
 void Full_On(){
   static int intensity = color.intensity;
-//  colorPrime = color;
-//  colorPrime.intensity = brightness;
+  colorPrime = color;
+  colorPrime.intensity = brightness;
 }
 
 void Breathe(){
