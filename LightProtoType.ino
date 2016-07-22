@@ -32,10 +32,11 @@ unsigned int intensity = 250;
 unsigned int rate = 5; 
 
 enum AnimationMode{
+  ON,
   BREATHE,
   BLINK,
   CYCLE,
-} mode = BREATHE;
+} mode = ON;
 
 typedef struct {
   int R;
@@ -87,22 +88,28 @@ void loop()
 
 void AnimationStep(){
   switch (mode){
+	  case ON:
+		  Full_On();
+          Serial.println("AnimationStep = on");
+	 break;
+
      case BREATHE:
-     //                                                                Serial.println("AnimationStep = BREATHE");
-      Breathe();
+         Breathe();
+	     Serial.println("AnimationStep = Breathe");
      break;
 
      case BLINK:
-     //                                                                Serial.println("AnimationStep = BLINK");
-      Blink();
+         Blink();
+         Serial.println("AnimationStep = BLINK");
      break;
 
      case CYCLE:
-     Serial.println("AnimationStep = CYCLE");
+         Serial.println("AnimationStep = CYCLE");
      break;
 
      default:
-     Serial.println("AnimationStep = default");
+		 Full_On();
+         Serial.println("AnimationStep = default");
      break;
   }
 }
@@ -155,8 +162,8 @@ void TakeInput(){
       
       break;
       
-      case Button0:
-      
+      case Button0: // Off
+        color.R = color.G = color.B = 0;
       break;
       
       case ButtonUp:
@@ -177,16 +184,16 @@ void TakeInput(){
         if (rate >=50){ rate = 50;}
       break;
 
-      case ButtonOK:
-        mode = BREATHE;
+      case ButtonOK: //Turn lights on
+        mode = ON;
       break;
       
       case ButtonStr:
         mode = BLINK;
       break;
       
-      case ButtonHsh: // Off
-        color.R = color.G = color.B = 0;
+      case ButtonHsh: //breath
+	     mode = BREATHE;
       break;   
     }
     Serial.println(input);
@@ -195,6 +202,12 @@ void TakeInput(){
   else {
   //                                                 Serial.println("no input :(");
   }
+}
+
+void Full_On(){
+  static int intensity = color.intensity;
+//  colorPrime = color;
+//  colorPrime.intensity = brightness;
 }
 
 void Breathe(){
@@ -237,7 +250,6 @@ void Breathe(){
 
 
 void Blink(){
-
   static enum{
     on,
     off,
@@ -247,19 +259,18 @@ void Blink(){
   static int brightness = 64;
 
   if (type == on){
-    delay(500);
+    delay(100*rate);
     brightness = 64;
     type = middle;
     
   }
   
   else if (type == middle){
-   //delay(500);
     type = off;
   }
   
   else {
-    delay(500);
+    delay(100*rate);
     brightness = 0;
     type = on;
   }
@@ -280,4 +291,3 @@ void SetLED(uint32_t c, uint8_t wait) {
     delay(wait);
   }
 }
-
